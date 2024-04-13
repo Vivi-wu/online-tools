@@ -1,24 +1,5 @@
 import { Container, List, ListItemButton, ListItemText } from "@mui/material";
-import Link from "next/link";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-
-interface ListItemLinkProps {
-  primary: string;
-  to: string;
-}
-
-function ListItemLink(props: ListItemLinkProps) {
-  const { primary, to } = props;
-
-  return (
-    <li>
-      <ListItemButton component={Link} href={to}>
-        <ListItemText primary={primary} />
-        <NavigateNextIcon />
-      </ListItemButton>
-    </li>
-  );
-}
 
 export default function Home() {
   const navList = [
@@ -28,7 +9,12 @@ export default function Home() {
     <Container component='main' maxWidth='sm' sx={{ my: 2, minHeight: 'calc(100vh - 32px)' }}>
         <List sx={{ bgcolor: 'background.paper'}}>
           {navList.map((item, index) => (
-            <ListItemLink key={index} to={item.link} primary={item.name}/>
+             <li key={index}>
+                <ListItemButton component='a' href={item.link}>
+                  <ListItemText primary={item.name} />
+                  <NavigateNextIcon />
+                </ListItemButton>
+              </li>
           ))}
         </List>
     </Container>

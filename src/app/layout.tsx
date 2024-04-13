@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter'; // or `v1X-appRouter` if you are using Next.js v1X
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'; // or `v1X-appRouter` if you are using Next.js v1X
 import "./globals.css";
 
 export const metadata: Metadata = {
