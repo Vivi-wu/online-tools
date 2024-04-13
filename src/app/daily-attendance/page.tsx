@@ -33,8 +33,6 @@ export default function DailyAttendancePage() {
     // 今日累计学习时长
     const [td_total_time, setTdTotalTime] = useState(0);
 
-
-
     useEffect(() =>{
         let tmpStr = localStorage.getItem('goal_desc');
         if (tmpStr) {
@@ -45,6 +43,24 @@ export default function DailyAttendancePage() {
     const handleClose = () => {
         setOpen(false);
     }
+
+    const showCaseList = [
+        {
+            title: '累计打卡',
+            value: countDays(records),
+            unit: '天',
+        },
+        {
+            title: '累计学习',
+            value: countMinutes(records),
+            unit: '分钟',
+        },
+        {
+            title: '今日学习',
+            value: td_total_time,
+            unit: '分钟',
+        },
+    ]
 
     return <Container>
         <h2>{year}年{month}月{day}日</h2>
@@ -57,27 +73,17 @@ export default function DailyAttendancePage() {
         <Card>
             <CardContent sx={{ '&:last-child': { pb: 2 } }}>
                 <Grid container justifyContent="center" textAlign="center" spacing={0}>
-                    <Grid item xs={4}>
-                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>累计打卡</Typography>
-                        <Box>
-                            <Typography component="span">{countDays(records)}</Typography>
-                            <Typography component="span">天</Typography>
-                        </Box>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>累计学习</Typography>
-                        <Box>
-                            <Typography component="span">{countMinutes(records)}</Typography>
-                            <Typography component="span">分钟</Typography>
-                        </Box>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>今日学习</Typography>
-                        <Box>
-                            <Typography component="span">{td_total_time}</Typography>
-                            <Typography component="span">分钟</Typography>
-                        </Box>
-                    </Grid>
+                    {
+                        showCaseList.map((item, index) => (
+                            <Grid key={index} item xs={4}>
+                                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>{item.title}</Typography>
+                                <Box>
+                                    <Typography component="span" sx={{ fontSize: 24 }}>{item.value}</Typography>
+                                    <Typography component="span" sx={{ fontSize: 'small' }} color="text.secondary">{item.unit}</Typography>
+                                </Box>
+                            </Grid>
+                        ))
+                    }
                 </Grid>
             </CardContent>
         </Card>
