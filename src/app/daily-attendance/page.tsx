@@ -1,6 +1,6 @@
 "use client";
-import { Edit } from "@mui/icons-material";
-import { Box, Button, Card, CardContent, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, TextField, Typography } from "@mui/material";
+import { AddTask, Edit } from "@mui/icons-material";
+import { Box, Button, Card, CardContent, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Slider, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
 type Record = {[key: string]: number};
@@ -60,11 +60,19 @@ export default function DailyAttendancePage() {
             value: td_total_time,
             unit: '分钟',
         },
-    ]
+    ];
+
+    const [value, setValue] = useState(0);
+    const handleSliderChange = (event: Event, newValue: number | number[]) => {
+        setValue(newValue as number);
+    };
+    const handleCheckClick = () => {
+        setTdTotalTime(value + td_total_time)
+    }
 
     return <Container>
         <h2>{year}年{month}月{day}日</h2>
-        <Box display='flex' alignItems='center' sx={{ mb: 1 }}>
+        <Box display='flex' alignItems='center' sx={{ mb: 2 }}>
             <Typography component="span">打卡目标：{goal_desc}</Typography>
             <IconButton aria-label="edit" size="small" onClick={() => setOpen(true)}>
                 <Edit fontSize="inherit" />
@@ -87,6 +95,21 @@ export default function DailyAttendancePage() {
                 </Grid>
             </CardContent>
         </Card>
+        <Box sx={{ mt: 3 }}>
+            <Typography variant="h6">真棒，又完成了{value}分钟的目标！</Typography>
+            <Box sx={{ px: 1, mt: 2 }}>
+                <Slider
+                    value={typeof value === 'number' ? value : 0}
+                    onChange={handleSliderChange}
+                    aria-labelledby="input-slider"
+                />
+            </Box>
+        </Box>
+        <Box sx={{ mt: 3 }} textAlign='center'>
+            <IconButton color='success' aria-label="add time" onClick={handleCheckClick}>
+                <AddTask sx={{ fontSize: '10rem' }} />
+            </IconButton>
+        </Box>
         <Dialog
             fullWidth
             maxWidth="sm"
