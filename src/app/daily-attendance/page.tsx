@@ -4,10 +4,6 @@ import { Box, Button, Card, CardContent, Container, Dialog, DialogActions, Dialo
 import { useEffect, useState } from "react";
 
 type Record = {[key: string]: number};
-const records: Record = {
-    "2024-04-12": 125,
-    "2024-04-13": 10,
-}
 
 function countDays(records: Record) {
     return Object.keys(records).length;
@@ -20,30 +16,19 @@ function countMinutes(records: Record) {
     }
     return total_time;
 }
+function getTimeByDate(dateStr: string, records: Record) {
+    return records[dateStr] || 0
+}
 
 // 从设置目标起，累计学习时长in 分钟
 // 今日累计学习时长in 分钟
 export default function DailyAttendancePage() {
     const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth() + 1;
-    const day = today.getDate();
-    const [goal_desc, setGoal] = useState('');
-    const [open, setOpen] = useState(false);
+    const tdDateStr = today.toLocaleDateString('zh-CN');
+    const todayStr = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
+    const [records, setRecords] = useState<Record>({"2024/4/12": 125,});
+    const td_total_time = getTimeByDate(tdDateStr, records);
     // 今日累计学习时长
-    const [td_total_time, setTdTotalTime] = useState(0);
-
-    useEffect(() =>{
-        let tmpStr = localStorage.getItem('goal_desc');
-        if (tmpStr) {
-            setGoal(tmpStr)
-        }
-    }, [])
-    
-    const handleClose = () => {
-        setOpen(false);
-    }
-
     const showCaseList = [
         {
             title: '累计打卡',
@@ -62,16 +47,36 @@ export default function DailyAttendancePage() {
         },
     ];
 
+    const [goal_desc, setGoal] = useState('');
+    useEffect(() =>{
+        let tmpStr = localStorage.getItem('goal_desc');
+        if (tmpStr) {
+            setGoal(tmpStr)
+        }
+        let tmpObj = localStorage.getItem('records');
+        if (tmpObj) {
+            setRecords(JSON.parse(tmpObj));
+        }
+    }, [])
+    
+    const [open, setOpen] = useState(false);
+    const handleClose = () => {
+        setOpen(false);
+    }
+
     const [value, setValue] = useState(0);
     const handleSliderChange = (event: Event, newValue: number | number[]) => {
         setValue(newValue as number);
     };
     const handleCheckClick = () => {
-        setTdTotalTime(value + td_total_time)
+        let val = value + td_total_time
+        let newRecord = {...records, [tdDateStr]: val};
+        setRecords(newRecord);
+        localStorage.setItem('records', JSON.stringify(newRecord));
     }
 
     return <Container>
-        <h2>{year}年{month}月{day}日</h2>
+        <h2>{todayStr}</h2>
         <Box display='flex' alignItems='center' sx={{ mb: 2 }}>
             <Typography component="span">打卡目标：{goal_desc}</Typography>
             <IconButton aria-label="edit" size="small" onClick={() => setOpen(true)}>
