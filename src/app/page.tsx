@@ -1,4 +1,4 @@
-import { List, ListItemButton, ListItemText, Paper } from "@mui/material";
+import { Container, List, ListItemButton, ListItemText } from "@mui/material";
 import Link from "next/link";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
@@ -25,14 +25,12 @@ export default function Home() {
     { name: '自律学习打卡', link: '/daily-attendance' }
   ]
   return (
-    <main>
-      <Paper>
-        <List>
+    <Container component='main' maxWidth='sm' sx={{ my: 2, minHeight: 'calc(100vh - 32px)' }}>
+        <List sx={{ bgcolor: 'background.paper'}}>
           {navList.map((item, index) => (
             <ListItemLink key={index} to={item.link} primary={item.name}/>
           ))}
         </List>
-      </Paper>
-    </main>
+    </Container>
   );
 }
