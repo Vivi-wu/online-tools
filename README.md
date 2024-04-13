@@ -19,6 +19,7 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 ```bash
 npm install @mui/material @emotion/react @emotion/styled
 npm install @mui/material-nextjs @emotion/cache
+npm install @mui/icons-material
 ```
 
 ## Deploy on Vercel
