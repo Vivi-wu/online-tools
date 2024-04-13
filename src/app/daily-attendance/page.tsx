@@ -1,6 +1,6 @@
 "use client";
-import { AddTask, Edit } from "@mui/icons-material";
-import { Box, Button, Card, CardContent, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Slider, TextField, Typography } from "@mui/material";
+import { AddTaskSharp, Edit } from "@mui/icons-material";
+import { Box, Button, Card, CardContent, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Slider, TextField, Typography, styled } from "@mui/material";
 import { useEffect, useState } from "react";
 
 type Record = {[key: string]: number};
@@ -20,13 +20,33 @@ function getTimeByDate(dateStr: string, records: Record) {
     return records[dateStr] || 0
 }
 
+const PrettoSlider = styled(Slider)({
+    color: '#52af77',
+    height: 8,
+    '& .MuiSlider-track': {
+      border: 'none',
+    },
+    '& .MuiSlider-thumb': {
+      height: 24,
+      width: 24,
+      backgroundColor: '#fff',
+      border: '2px solid currentColor',
+      '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
+        boxShadow: 'inherit',
+      },
+      '&::before': {
+        display: 'none',
+      },
+    },
+});
+
 // 从设置目标起，累计学习时长in 分钟
 // 今日累计学习时长in 分钟
 export default function DailyAttendancePage() {
     const today = new Date();
     const tdDateStr = today.toLocaleDateString('zh-CN');
     const todayStr = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
-    const [records, setRecords] = useState<Record>({"2024/4/12": 125,});
+    const [records, setRecords] = useState<Record>({});
     const td_total_time = getTimeByDate(tdDateStr, records);
     // 今日累计学习时长
     const showCaseList = [
@@ -76,15 +96,15 @@ export default function DailyAttendancePage() {
     }
 
     return <Container>
-        <h2>{todayStr}</h2>
+        <Typography component="h2" sx={{ mb: 2, mt: 3, fontSize: '2rem' }}>{todayStr}</Typography>
         <Box display='flex' alignItems='center' sx={{ mb: 2 }}>
-            <Typography component="span">打卡目标：{goal_desc}</Typography>
+            <Typography component="span">目标：{goal_desc}</Typography>
             <IconButton aria-label="edit" size="small" onClick={() => setOpen(true)}>
                 <Edit fontSize="inherit" />
             </IconButton>
         </Box>
         <Card>
-            <CardContent sx={{ '&:last-child': { pb: 2 } }}>
+            <CardContent sx={{ '&:last-child': { pb: 2, pt: 3 } }}>
                 <Grid container justifyContent="center" textAlign="center" spacing={0}>
                     {
                         showCaseList.map((item, index) => (
@@ -100,10 +120,10 @@ export default function DailyAttendancePage() {
                 </Grid>
             </CardContent>
         </Card>
-        <Box sx={{ mt: 3 }}>
+        <Box sx={{ mt: 4, px: 2 }}>
             <Typography variant="h6">真棒，又完成了{value}分钟的目标！</Typography>
-            <Box sx={{ px: 1, mt: 2 }}>
-                <Slider
+            <Box sx={{ mt: 2 }}>
+                <PrettoSlider
                     value={typeof value === 'number' ? value : 0}
                     onChange={handleSliderChange}
                     aria-labelledby="input-slider"
@@ -111,8 +131,8 @@ export default function DailyAttendancePage() {
             </Box>
         </Box>
         <Box sx={{ mt: 3 }} textAlign='center'>
-            <IconButton color='success' aria-label="add time" onClick={handleCheckClick}>
-                <AddTask sx={{ fontSize: '10rem' }} />
+            <IconButton sx={{ color: value > 0 ? '#52af77' : 'default' }} aria-label="add time" onClick={handleCheckClick}>
+                <AddTaskSharp sx={{ fontSize: '10rem' }} />
             </IconButton>
         </Box>
         <Dialog
