@@ -1,25 +1,33 @@
 "use client";
-import { Table, Button, Input, Space, Popconfirm, Alert } from 'antd';
+import { Table, Button, Input, Space, Popconfirm, Alert, TableColumnType, TableProps } from 'antd';
 import { SearchOutlined, PlusOutlined, DeleteOutlined, EditOutlined, DownloadOutlined } from '@ant-design/icons';
 import { useEffect, useRef, useState } from 'react';
+import type { FilterDropdownProps } from 'antd/es/table/interface';
+import { ROOM_SOURCE_MAP, RoomData, RoomDataIndex, demoData, exportFile } from '../ui/house-hunting/utils';
+import AddRoomModal from '@/ui/house-hunting/AddRoomModal';
+import EditRoomModal from '@/ui/house-hunting/EditRoomModal';
 import Highlighter from 'react-highlight-words';
-import './App.css';
+import './HouseHuntingPage.css';
 
-function App() {
+function HouseHuntingPage() {
   const isSmallDevice = window.matchMedia('(max-width: 767px)').matches;
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: FilterDropdownProps['confirm'],
+    dataIndex: RoomDataIndex,
+  ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-  const handleReset = (clearFilters) => {
+  const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText('');
   };
-  const getColumnSearchProps = (dataIndex) => ({
+  const getColumnSearchProps = (dataIndex: RoomDataIndex): TableColumnType<RoomData> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div
         style={{
@@ -32,7 +40,7 @@ function App() {
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
           style={{
             marginBottom: 8,
             display: 'block',
@@ -41,7 +49,7 @@ function App() {
         <Space>
           <Button
             type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
             icon={<SearchOutlined />}
             size="small"
             style={{
@@ -62,7 +70,7 @@ function App() {
               confirm({
                 closeDropdown: false,
               });
-              setSearchText(selectedKeys[0]);
+              setSearchText((selectedKeys as string[])[0]);
               setSearchedColumn(dataIndex);
             }}
           >筛选</Button>
@@ -76,7 +84,7 @@ function App() {
         </Space>
       </div>
     ),
-    filterIcon: (filtered) => (
+    filterIcon: (filtered: boolean) => (
       <SearchOutlined
         style={{
           color: filtered ? '#1890ff' : undefined,
@@ -84,7 +92,7 @@ function App() {
       />
     ),
     onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+      record[dataIndex].toString().toLowerCase().includes((value as string).toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);
@@ -107,7 +115,7 @@ function App() {
   });
 
   const [data, setData] = useState(demoData);
-  const onSetData = (values) => {
+  const onSetData = (values: RoomData[]) => {
     setData(values);
     localStorage.setItem('room_data', JSON.stringify(values))
   }
@@ -118,32 +126,32 @@ function App() {
     }
   }, [])
 
-  const handleDelete = (index) => {
+  const handleDelete = (index: number) => {
     let newData = data.slice(0)
     newData.splice(index, 1);
     onSetData(newData);
   };
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const onSelectChange = (newSelectedRowKeys) => {
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
   const [openAdd, setOpenAdd] = useState(false);
-  const handleCreate = (values) => {
+  const handleCreate = (values: RoomData) => {
     onSetData([...data, values])
     setOpenAdd(false)
   };
 
   const [openEdit, setOpenEdit] = useState(false);
-  const [formData, setFormData] = useState(null);
+  const [formData, setFormData] = useState<RoomData>(null as any);
   const [editIndex, setEditIndex] = useState(-1);
-  const handleEdit = (record, index) => {
+  const handleEdit = (record: RoomData, index: number) => {
     setFormData(record)
     setEditIndex(index)
     setOpenEdit(true)
   };
-  const handleUpdate = (values) => {
+  const handleUpdate = (values: RoomData) => {
     const newData = data.map((d, i) => {
       if (i === editIndex) {
         return values;
@@ -155,7 +163,7 @@ function App() {
     setOpenEdit(false)
   };
 
-  const tableColumns = [
+  const tableColumns: TableProps<RoomData>['columns'] = [
     {
       title: '地址',
       dataIndex: 'address',
@@ -167,15 +175,15 @@ function App() {
       title: '房源No.',
       dataIndex: 'roomNo',
       width: 75,
-      render: (text) => <>#{text}</>,
+      render: (text: string) => <>#{text}</>,
     },
     {
       title: '月租总价',
       dataIndex: 'total',
       width: 95,
-      render: (text) => <>{text}元</>,
+      render: (text: string) => <>{text}元</>,
       sorter: {
-        compare: (a, b) => a.total - b.total,
+        compare: (a: RoomData, b: RoomData) => Number(a.total) - Number(b.total),
         multiple: 2,
       },
     },
@@ -183,9 +191,9 @@ function App() {
       title: '通勤时间',
       dataIndex: 'commuteTime',
       width: 95,
-      render: (text) => <>{text}分钟</>,
+      render: (text: string) => <>{text}分钟</>,
       sorter: {
-        compare: (a, b) => a.commuteTime - b.commuteTime,
+        compare: (a: RoomData, b: RoomData) => Number(a.commuteTime) - Number(b.commuteTime),
         multiple: 1,
       },
     },
@@ -196,7 +204,7 @@ function App() {
           title: '月租金',
           dataIndex: 'monthlyRent',
           width: 85,
-          render: (text) => <>{text}元</>,
+          render: (text: string) => <>{text}元</>,
         },
         {
           title: '生活缴费',
@@ -256,14 +264,14 @@ function App() {
       dataIndex: 'link',
       width: 150,
       ellipsis: true,
-      render: (text) => <a href={text} target="_blank" rel="noreferrer">{text}</a>,
+      render: (text: string) => <a href={text} target="_blank" rel="noreferrer">{text}</a>,
     },
     {
       title: '来源',
       dataIndex: 'source',
       width: 100,
       className: 'unset-white-space',
-      render: (text) => {
+      render: (text: number) => {
         const val = ROOM_SOURCE_MAP.find(d => d.value === text)
         return val ? val.label : text
       },
@@ -285,7 +293,7 @@ function App() {
       fixed: isSmallDevice ? false : 'right',
       width: 85,
       className: 'td-action',
-      render: (_, record, index) => <>
+      render: (_: any, record: RoomData, index: number) => <>
         <Button type='link' icon={<EditOutlined />} onClick={() => handleEdit(record, index)} />
         <Popconfirm
           title="确定要删除这行数据吗?"
@@ -310,11 +318,11 @@ function App() {
           icon={<PlusOutlined />}
           onClick={() => setOpenAdd(true)}
         >新增</Button>
-        { data.length ? <Button
+        {/* { data.length ? <Button
           size='large'
           icon={<DownloadOutlined />}
           onClick={() => exportFile(data)}
-        >导出xlsx文件</Button> : null }
+        >导出xlsx文件</Button> : null } */}
       </Space>
       <Table
         rowKey='roomNo'
@@ -348,4 +356,4 @@ function App() {
   </>);
 }
 
-export default App;
+export default HouseHuntingPage;

@@ -1,0 +1,31 @@
+.root-container {
+  padding: 16px;
+}
+.root-container .ant-table-thead > tr > th,
+.root-container .ant-table-tbody > tr > td {
+  overflow-wrap: unset;
+  white-space: pre;
+}
+
+.unset-white-space {
+  white-space: unset !important;
+}
+
+td.td-action {
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+}
+td.td-action button:first-of-type {
+  margin-right: 8px;
+}
+
+.ant-table-tbody > tr.ant-table-row-selected > td {
+  color: #00000040;
+  background: #f5f5f5;
+  text-shadow: none;
+  box-shadow: none;
+  text-decoration: line-through;
+}
+.ant-table-tbody > tr.ant-table-row-selected:hover > td {
+  background: #f5f5f5;
+}

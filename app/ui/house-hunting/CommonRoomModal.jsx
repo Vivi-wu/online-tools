@@ -1,6 +1,6 @@
 import { Input, Modal, Form, Select, AutoComplete } from 'antd';
 import { useState } from 'react';
-import { ROOM_SOURCE_MAP } from '../utils';
+import { ROOM_SOURCE_MAP } from './utils';
 const { TextArea } = Input;
 
 export default function CommonFormModal({ title, open, onOk, onCancel, form, tableData }) {
