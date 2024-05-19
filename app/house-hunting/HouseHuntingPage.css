@@ -7,8 +7,8 @@
   white-space: pre;
 }
 
-.unset-white-space {
-  white-space: unset !important;
+.root-container .ant-table-thead > tr > th, .root-container .ant-table-tbody > tr > td.white-space-normal {
+  white-space: normal;
 }
 
 td.td-action {

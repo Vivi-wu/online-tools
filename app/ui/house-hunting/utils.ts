@@ -45,19 +45,21 @@ export const demoData: RoomData[] = [
     note: '月租金包含水、网、物业、宽带、燃气、保洁费',
   }
 ];
-
-export const ROOM_SOURCE_MAP = [
-  { label: '房东直租', value: 0 },
-  { label: '链家', value: 1 },
-  { label: '贝壳', value: 2 },
-  { label: '我爱我家', value: 3 },
-  { label: '小红书中介', value: 4 },
-  { label: '咸鱼中介', value: 5 },
-  { label: '豆瓣小组中介', value: 6 },
-  { label: '自如', value: 7 },
-  { label: '个人转租', value: 8 },
-  { label: '其他', value: 9 },
+// 枚举类型：房源来源
+const RoomSourceArr = [
+  '房东直租',
+  '二房东',
+  '链家',
+  '贝壳',
+  '我爱我家',
+  '小红书中介',
+  '咸鱼中介',
+  '豆瓣小组中介',
+  '自如',
+  '个人转租',
+  '其他',
 ];
+export const ROOM_SOURCE_MAP = RoomSourceArr.map((room: string, index: number) => ({ label: room, value: index }));
 
 const exportSheetHeaderObj = {
   roomNo: '房源编号',

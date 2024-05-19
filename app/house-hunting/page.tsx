@@ -195,7 +195,6 @@ function HouseHuntingPage() {
           title: '生活缴费',
           dataIndex: 'livingExpenses',
           width: 250,
-          className: 'unset-white-space'
         },
         {
           title: '服务费',
@@ -223,26 +222,23 @@ function HouseHuntingPage() {
     {
       title: '卫生间',
       dataIndex: 'bathroom',
-      width: 150,
-      className: 'unset-white-space'
+      width: 130,
     },
     {
       title: '厨房',
       dataIndex: 'kitchen',
-      width: 130,
-      className: 'unset-white-space'
+      width: 120,
     },
     {
       title: '阳台',
       dataIndex: 'balcony',
       width: 110,
-      className: 'unset-white-space'
     },
     {
       title: '周边',
       dataIndex: 'surrounding',
       width: 220,
-      className: 'unset-white-space'
+      className: 'white-space-normal'
     },
     {
       title: '链接',
@@ -255,7 +251,6 @@ function HouseHuntingPage() {
       title: '来源',
       dataIndex: 'source',
       width: 100,
-      className: 'unset-white-space',
       render: (text: number) => {
         const val = ROOM_SOURCE_MAP.find(d => d.value === text)
         return val ? val.label : text
@@ -270,7 +265,7 @@ function HouseHuntingPage() {
       title: '备注',
       dataIndex: 'note',
       width: 300,
-      className: 'unset-white-space'
+      className: 'white-space-normal'
     },
     {
       title: '操作',
