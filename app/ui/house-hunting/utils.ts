@@ -26,23 +26,23 @@ export type RoomDataIndex = keyof RoomData;
 export const demoData: RoomData[] = [
   {
     roomNo: 1,
-    address: 'xx小区x幢/x号楼-房间号',
+    address: 'xx小区x幢/x号楼x单元x室',
     monthlyRent: 'xxxx',
-    livingExpenses: '民用电费均摊，平均约xxx元',
-    serviceCost: '',
-    total: 'xxxx',
+    livingExpenses: '民用峰谷电，平均约xx元/月',
+    serviceCost: 'x元/月',
+    total: 'xxx',
     commuteTime: 'xx',
-    intermediaryFees: '',
+    intermediaryFees: 'x元',
     facing: '南',
     area: 'xx',
     bathroom: 'x人共用',
     kitchen: '明厨，新冰箱',
     balcony: '独立阳台',
-    surrounding: '步行x分钟至地铁口、x分钟到公交站，大型商超，三甲医院',
+    surrounding: '步行x分钟至地铁口、x分钟到公交站，商超，医院',
     link: 'https://rent-decision.com/xxx',
     source: 0,
-    phone: '1xxxxxxxxxx',
-    note: '月租金包含水、网、物业、宽带、燃气、保洁费',
+    phone: '某某：1xxxxxxxxxx',
+    note: '月租金包含水、网、物业、宽带、燃气、保洁费，电费均摊',
   }
 ];
 // 枚举类型：房源来源

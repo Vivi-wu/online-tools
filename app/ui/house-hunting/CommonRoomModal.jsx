@@ -1,20 +1,15 @@
 import { Input, Modal, Form, Select, AutoComplete } from 'antd';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ROOM_SOURCE_MAP } from './utils';
 const { TextArea } = Input;
 
 export default function CommonFormModal({ title, open, onOk, onCancel, form, tableData }) {
   const [options, setOptions] = useState([]);
 
-  const onSearch = (searchText) => {
-    if (searchText) {
-      // 去重
-      const tmpArr = [...new Set(tableData.map(d => d.roomNo))]
-      setOptions(tmpArr.map(d => ({ label: d, value: d })))
-    } else {
-      setOptions([])
-    }
-  };
+  useEffect(() => {
+    const options = tableData.map(d => ({ value: String(d.roomNo) }))
+    setOptions(options)
+  }, [tableData])
 
   const onSelect = (data) => {
     const tmpVal = tableData.find(d => d.roomNo === data)
@@ -41,9 +36,11 @@ export default function CommonFormModal({ title, open, onOk, onCancel, form, tab
           <AutoComplete
             options={options}
             onSelect={onSelect}
-            onSearch={onSearch}
+            filterOption={(inputValue, option) =>
+              option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+            }
             allowClear
-            placeholder='房源编号作为一所出租房的唯一标识'
+            placeholder='可以选择已有的房源编号进行快速填写'
           />
         </Form.Item>
         <Form.Item label='地址' name='address'>

@@ -150,7 +150,7 @@ function HouseHuntingPage() {
 
   const tableColumns: TableProps<RoomData>['columns'] = [
     {
-      title: '地址',
+      title: '详细地址',
       dataIndex: 'address',
       fixed: isSmallDevice ? false : 'left',
       width: 230,
@@ -176,25 +176,25 @@ function HouseHuntingPage() {
       title: '通勤时间',
       dataIndex: 'commuteTime',
       width: 95,
-      render: (text: string) => <>{text}分钟</>,
+      render: (text: string) => <>{text ? text + '分钟' : '-' }</>,
       sorter: {
         compare: (a: RoomData, b: RoomData) => Number(a.commuteTime) - Number(b.commuteTime),
         multiple: 1,
       },
     },
     {
-      title: '房租/月',
+      title: '租房成本',
       children: [
         {
           title: '月租金',
           dataIndex: 'monthlyRent',
-          width: 85,
+          width: 110,
           render: (text: string) => <>{text}元</>,
         },
         {
           title: '生活缴费',
           dataIndex: 'livingExpenses',
-          width: 250,
+          width: 220,
         },
         {
           title: '服务费',
@@ -212,7 +212,6 @@ function HouseHuntingPage() {
       title: '朝向',
       dataIndex: 'facing',
       width: 80,
-      ...getColumnSearchProps('facing'),
     },
     {
       title: '面积(㎡)',
@@ -257,7 +256,7 @@ function HouseHuntingPage() {
       },
     },
     {
-      title: '联系电话',
+      title: '联系方式',
       dataIndex: 'phone',
       width: 130,
     },
@@ -305,6 +304,7 @@ function HouseHuntingPage() {
         >导出xlsx文件</Button> : null } */}
       </Space>
       <Table
+        id='house-hunting-table'
         rowKey='roomNo'
         columns={tableColumns}
         dataSource={data}
