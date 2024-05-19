@@ -9,8 +9,9 @@ import EditRoomModal from '@/ui/house-hunting/EditRoomModal';
 import Highlighter from 'react-highlight-words';
 import './HouseHuntingPage.css';
 
+const isSmallDevice = window.matchMedia('(max-width: 767px)').matches;
+
 function HouseHuntingPage() {
-  const isSmallDevice = window.matchMedia('(max-width: 767px)').matches;
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
