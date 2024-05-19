@@ -197,7 +197,7 @@ function HouseHuntingPage() {
           width: 220,
         },
         {
-          title: '服务费',
+          title: '其他费用',
           dataIndex: 'serviceCost',
           width: 85,
         },

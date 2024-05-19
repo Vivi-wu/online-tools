@@ -30,7 +30,7 @@ export const demoData: RoomData[] = [
     monthlyRent: 'xxxx',
     livingExpenses: '民用峰谷电，平均约xx元/月',
     serviceCost: 'x元/月',
-    total: 'xxx',
+    total: 'xxxx',
     commuteTime: 'xx',
     intermediaryFees: 'x元',
     facing: '南',
