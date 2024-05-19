@@ -3,7 +3,7 @@ import { Table, Button, Input, Space, Popconfirm, Alert, TableColumnType, TableP
 import { SearchOutlined, PlusOutlined, DeleteOutlined, EditOutlined, DownloadOutlined } from '@ant-design/icons';
 import { useEffect, useRef, useState } from 'react';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
-import { ROOM_SOURCE_MAP, RoomData, RoomDataIndex, demoData, exportFile } from '../ui/house-hunting/utils';
+import { ROOM_SOURCE_MAP, RoomData, RoomDataIndex, demoData } from '../ui/house-hunting/utils';
 import AddRoomModal from '@/ui/house-hunting/AddRoomModal';
 import EditRoomModal from '@/ui/house-hunting/EditRoomModal';
 import Highlighter from 'react-highlight-words';
@@ -67,17 +67,6 @@ function HouseHuntingPage() {
             type="link"
             size="small"
             onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchText((selectedKeys as string[])[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >筛选</Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
               close();
             }}
           >关闭</Button>
@@ -93,11 +82,6 @@ function HouseHuntingPage() {
     ),
     onFilter: (value, record) =>
       record[dataIndex].toString().toLowerCase().includes((value as string).toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
     render: (text) =>
       searchedColumn === dataIndex ? (
         <Highlighter
