@@ -10,7 +10,7 @@ export default function Home() {
     <Container component='main' maxWidth='sm' sx={{ my: 2, minHeight: 'calc(100vh - 32px)' }}>
         <List sx={{ bgcolor: 'background.paper'}}>
           {navList.map((item, index) => (
-             <li key={index}>
+             <li key={index} style={{ backgroundColor: index % 2 === 0 ? 'inherit' : 'rgba(25, 118, 210, 0.06)' }}>
                 <ListItemButton component='a' href={item.link}>
                   <ListItemText primary={item.name} />
                   <NavigateNextIcon />
