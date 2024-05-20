@@ -1,7 +1,8 @@
 // import { utils, writeFileXLSX } from 'xlsx';
 
 export interface RoomData {
-  roomNo: number,
+  id: number,
+  roomNo: string,
   address: string,
   monthlyRent: string,
   livingExpenses: string,
@@ -25,7 +26,8 @@ export type RoomDataIndex = keyof RoomData;
 
 export const demoData: RoomData[] = [
   {
-    roomNo: 1,
+    id: 1,
+    roomNo: '1',
     address: 'xx小区x幢/x号楼x单元x室',
     monthlyRent: 'xxxx',
     livingExpenses: '民用峰谷电，平均约xx元/月',

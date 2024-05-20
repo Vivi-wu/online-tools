@@ -31,9 +31,7 @@ function HouseHuntingPage() {
   const getColumnSearchProps = (dataIndex: RoomDataIndex): TableColumnType<RoomData> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div
-        style={{
-          padding: 8,
-        }}
+        style={{ padding: 8 }}
         onKeyDown={(e) => e.stopPropagation()}
       >
         <Input
@@ -42,10 +40,7 @@ function HouseHuntingPage() {
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-          style={{
-            marginBottom: 8,
-            display: 'block',
-          }}
+          style={{ marginBottom: 8, display: 'block' }}
         />
         <Space>
           <Button
@@ -53,16 +48,12 @@ function HouseHuntingPage() {
             onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
             icon={<SearchOutlined />}
             size="small"
-            style={{
-              width: 90,
-            }}
+            style={{ width: 90 }}
           >搜索</Button>
           <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
             size="small"
-            style={{
-              width: 90,
-            }}
+            style={{ width: 90 }}
           >重置</Button>
           <Button
             type="link"
@@ -76,9 +67,7 @@ function HouseHuntingPage() {
     ),
     filterIcon: (filtered: boolean) => (
       <SearchOutlined
-        style={{
-          color: filtered ? '#1890ff' : undefined,
-        }}
+        style={{ color: filtered ? '#1890ff' : undefined }}
       />
     ),
     onFilter: (value, record) =>
@@ -99,22 +88,22 @@ function HouseHuntingPage() {
       ),
   });
 
-  const [data, setData] = useState(demoData);
+  const [roomData, SetRoomData] = useState(demoData);
+  // 更新房间数据状态
   const onSetData = (values: RoomData[]) => {
-    setData(values);
+    SetRoomData(values);
     localStorage.setItem('room_data', JSON.stringify(values))
   }
   useEffect(() => {
     const tmpVal = localStorage.getItem('room_data')
     if (tmpVal) {
-      setData(JSON.parse(tmpVal))
+      SetRoomData(JSON.parse(tmpVal))
     }
   }, [])
 
+  // 删除
   const handleDelete = (index: number) => {
-    let newData = data.slice(0)
-    newData.splice(index, 1);
-    onSetData(newData);
+    onSetData(roomData.filter((d, i) => i!== index));
   };
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -123,22 +112,25 @@ function HouseHuntingPage() {
   };
 
   const [openAdd, setOpenAdd] = useState(false);
+  // 添加
   const handleCreate = (values: RoomData) => {
-    onSetData([...data, values])
+    onSetData([...roomData, { ...values, id: roomData.length + 1 }])
     setOpenAdd(false)
   };
 
   const [openEdit, setOpenEdit] = useState(false);
   const [formData, setFormData] = useState<RoomData>(null as any);
-  const [editIndex, setEditIndex] = useState(-1);
-  const handleEdit = (record: RoomData, index: number) => {
+  const [editId, setEditId] = useState(-1);
+  const handleClickEdit = (record: RoomData) => {
     setFormData(record)
-    setEditIndex(index)
+    setEditId(record.id)
     setOpenEdit(true)
   };
+
+  // 更新编辑后的数据
   const handleUpdate = (values: RoomData) => {
-    const newData = data.map((d, i) => {
-      if (i === editIndex) {
+    const newData = roomData.map(d => {
+      if (d.id === editId) {
         return values;
       } else {
         return d;
@@ -273,7 +265,7 @@ function HouseHuntingPage() {
       width: 85,
       className: 'td-action',
       render: (_: any, record: RoomData, index: number) => <>
-        <Button type='link' icon={<EditOutlined />} onClick={() => handleEdit(record, index)} />
+        <Button type='link' icon={<EditOutlined />} onClick={() => handleClickEdit(record)} />
         <Popconfirm
           title="确定要删除这行数据吗?"
           onConfirm={() => handleDelete(index)}
@@ -297,17 +289,17 @@ function HouseHuntingPage() {
           icon={<PlusOutlined />}
           onClick={() => setOpenAdd(true)}
         >新增</Button>
-        {/* { data.length ? <Button
+        {/* { roomData.length ? <Button
           size='large'
           icon={<DownloadOutlined />}
-          onClick={() => exportFile(data)}
+          onClick={() => exportFile(roomData)}
         >导出xlsx文件</Button> : null } */}
       </Space>
       <Table
         id='house-hunting-table'
-        rowKey='roomNo'
+        rowKey='id'
         columns={tableColumns}
-        dataSource={data}
+        dataSource={roomData}
         bordered
         scroll={{ x: 2000 }}
         rowSelection={{
@@ -323,14 +315,14 @@ function HouseHuntingPage() {
         open={openAdd}
         onCancel={() => setOpenAdd(false)}
         onCreate={handleCreate}
-        tableData={data}
+        tableData={roomData}
       />
       <EditRoomModal
         open={openEdit}
         initialData={formData}
         onCancel={() => setOpenEdit(false)}
         onUpdate={handleUpdate}
-        tableData={data}
+        tableData={roomData}
       />
     </div>
   </>);
