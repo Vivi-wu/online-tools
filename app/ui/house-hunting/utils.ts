@@ -63,6 +63,22 @@ const RoomSourceArr = [
 ];
 export const ROOM_SOURCE_MAP = RoomSourceArr.map((room: string, index: number) => ({ label: room, value: index }));
 
+// 将JSON数据保存到JSON文件，并下载到本地
+export function downloadJSON(data: any, fileName: string) {
+  // 将数据转换为字符串
+  const jsonStr = JSON.stringify(data, null, 2); // 第三个参数是缩进量，使输出更易读
+
+  // 创建隐藏的可下载链接
+  const downloadLink = document.createElement('a');
+  downloadLink.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(jsonStr);
+  downloadLink.download = fileName;
+
+  // 触发点击或者模拟点击
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+}
+
 const exportSheetHeaderObj = {
   roomNo: '房源编号',
   address: '地址',

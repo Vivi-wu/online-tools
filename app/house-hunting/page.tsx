@@ -3,7 +3,7 @@ import { Table, Button, Input, Space, Popconfirm, Alert, TableColumnType, TableP
 import { SearchOutlined, PlusOutlined, DeleteOutlined, EditOutlined, DownloadOutlined } from '@ant-design/icons';
 import { useEffect, useRef, useState } from 'react';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
-import { ROOM_SOURCE_MAP, RoomData, RoomDataIndex, demoData } from '../ui/house-hunting/utils';
+import { ROOM_SOURCE_MAP, RoomData, RoomDataIndex, demoData, downloadJSON } from '../ui/house-hunting/utils';
 import AddRoomModal from '@/ui/house-hunting/AddRoomModal';
 import EditRoomModal from '@/ui/house-hunting/EditRoomModal';
 import Highlighter from 'react-highlight-words';
@@ -88,16 +88,16 @@ function HouseHuntingPage() {
       ),
   });
 
-  const [roomData, SetRoomData] = useState(demoData);
+  const [roomData, setRoomData] = useState(demoData);
   // 更新房间数据状态
   const onSetData = (values: RoomData[]) => {
-    SetRoomData(values);
+    setRoomData(values);
     localStorage.setItem('room_data', JSON.stringify(values))
   }
   useEffect(() => {
     const tmpVal = localStorage.getItem('room_data')
     if (tmpVal) {
-      SetRoomData(JSON.parse(tmpVal))
+      setRoomData(JSON.parse(tmpVal))
     }
   }, [])
 
@@ -279,6 +279,29 @@ function HouseHuntingPage() {
     }
   ];
 
+  // 从JSON文件导入数据
+  const handleJsonFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files? e.target.files[0] : null;
+    if (!file) return 
+    if (file.type !== 'application/json') {
+        alert("请选择一个JSON文件");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      if (!e.target) return;
+        try {
+            const tmpVal = e.target.result as string
+            localStorage.setItem('room_data', tmpVal)
+            setRoomData(JSON.parse(tmpVal))
+        } catch (err) {
+            console.error("解析JSON时发生错误:", err);
+        }
+    };
+    reader.readAsText(file);
+  }
+
   return (<>
     { isSmallDevice ? <Alert message="请在电脑端打开，或将设备转为横屏模式使用，以获得更好的使用体验" banner /> : null }
     <div className="root-container">
@@ -289,11 +312,19 @@ function HouseHuntingPage() {
           icon={<PlusOutlined />}
           onClick={() => setOpenAdd(true)}
         >新增</Button>
-        {/* { roomData.length ? <Button
-          size='large'
-          icon={<DownloadOutlined />}
-          onClick={() => exportFile(roomData)}
-        >导出xlsx文件</Button> : null } */}
+        { roomData.length ? <>
+          <Button
+            size='large'
+            icon={<DownloadOutlined />}
+            onClick={() => downloadJSON(roomData, '房源数据.json')}
+          >下载JSON数据</Button>
+          <input type="file" accept=".json" onChange={handleJsonFileChange} />
+          {/* <Button
+            size='large'
+            icon={<DownloadOutlined />}
+            onClick={() => exportFile(roomData)}
+          >导出xlsx文件</Button> */}
+        </> : null }
       </Space>
       <Table
         id='house-hunting-table'
